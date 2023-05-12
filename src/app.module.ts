@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from './common/common.module';
 import { PingModule } from './ping/ping.module';
 import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
+import getCurrentEnvironment from './utils/getCurrentEnvironment';
 
 @Module({
   imports: [
@@ -16,7 +17,10 @@ import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
       autoSchemaFile: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath:
+        getCurrentEnvironment() === 'development' ? '.env' : '.development.env',
+    }),
     CommonModule,
   ],
   providers: [
